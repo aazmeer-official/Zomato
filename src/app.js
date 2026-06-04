@@ -1,8 +1,3 @@
-// .env File
-if(process.env.NODE_ENV != "production"){
-    require('dotenv').config()
-}
-
 // Create Server
 
 const express = require("express")

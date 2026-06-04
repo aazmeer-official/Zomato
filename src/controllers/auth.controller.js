@@ -1,7 +1,7 @@
 const userModel = require("../models/user.model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-
+const secret = process.env.SECRET
 registerUser = async (req,res)=>{
     const {fullName,email,password} = req.body;
     const isUserAlreadyExists = await userModel.findOne({
@@ -23,7 +23,7 @@ registerUser = async (req,res)=>{
 
     const token = jwt.sign({
         id: user._id,
-    },"ee1c0584848d443d037d378a786efe74")
+    },secret)
     res.cookie("token",token)
     res.status(201).json({
         message:"USer Registered succesfully",
@@ -34,8 +34,45 @@ registerUser = async (req,res)=>{
         }
     })
     // await user.save()
-}
+    }
+loginUser = async (req,res)=>{
+    const{email,password} = req.body
+    const user = await userModel.findOne({
+        email
+    })
+    if(!email){
+        return res.status(400).json({
+            message:"Invalid Email or Password"
+        })
+    }
+
+    const isPasswordValid = await bcrypt.compare(password,user.password)
+
+    if(!isPasswordValid){
+            return res.status(400).json({
+                message:"Invalid Email or Password"
+            })       
+        }
+
+        const token = jwt.sign({
+        id:user._id,
+    },secret)
+
+    res.cookie("token",token)
+    res.status(201).json({
+        message:"USer Logged in succesfully",
+        user:{
+            _id: user._id,
+            email:user.email,
+            fullName: user.fullName
+        }
+    })
+
+    }
+
+    
 
 module.exports = {
-    registerUser
+    registerUser,
+    loginUser
 }
