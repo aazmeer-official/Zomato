@@ -8,6 +8,7 @@ const methodOverride = require('method-override');
 const cookieParser = require("cookie-parser")
 const dns = require("dns");
 const authRoutes = require("./routes/auth.routes.js")
+const foodRoutes = require("./routes/food.routes.js")
 
 dns.setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -22,5 +23,9 @@ connectDB()
 app.get("/",(req,res)=>{ 
     res.send("Response")
 })
+
+
+// Routes
 app.use("/api/auth",authRoutes)
+app.use("/api/food",foodRoutes)
 module.exports = app;

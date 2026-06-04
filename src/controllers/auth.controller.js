@@ -143,7 +143,6 @@ const loginFoodPartner = async (req,res)=>{
     })
 
 }
-
 const logoutFoodPartner = (req,res)=>{
     res.clearCookie("token")
     res.status(200).json({
