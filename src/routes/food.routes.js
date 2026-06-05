@@ -5,7 +5,9 @@ const foodModel = require("../models/food.model")
 const authMiddleware = require("../middlewares/auth.middleware")
 const multer = require("multer")
 
+const upload = multer({ storage: storage })
+
 // POST /api /food [protected]
-router.post("/",authMiddleware.authFoodPartnerMiddleware,foodController.createFood)
+router.post("/",authMiddleware.authFoodPartnerMiddleware,upload.single("video"),foodController.createFood)
 
 module.exports = router;
