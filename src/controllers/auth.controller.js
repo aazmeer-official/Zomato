@@ -37,11 +37,13 @@ const registerUser = async (req,res)=>{
     // await user.save()
     }
 const loginUser = async (req,res)=>{
-    const{email,password} = req.body
+    const {email,password} = req.body
+
     const user = await userModel.findOne({
         email
     })
-    if(!email){
+
+    if(!user){
         return res.status(400).json({
             message:"Invalid Email or Password"
         })
@@ -50,26 +52,26 @@ const loginUser = async (req,res)=>{
     const isPasswordValid = await bcrypt.compare(password,user.password)
 
     if(!isPasswordValid){
-            return res.status(400).json({
-                message:"Invalid Email or Password"
-            })       
-        }
+        return res.status(400).json({
+            message:"Invalid Email or Password"
+        })       
+    }
 
     const token = jwt.sign({
         id:user._id,
     },secret)
 
     res.cookie("token",token)
-    res.status(201).json({
-        message:"USer Logged in succesfully",
+
+    res.status(200).json({
+        message:"User Logged in succesfully",
         user:{
             _id: user._id,
             email:user.email,
             fullName: user.fullName
         }
     })
-
-    }
+}
 const logoutUser = (req,res)=>{
     res.clearCookie("token")
     res.status(200).json({
